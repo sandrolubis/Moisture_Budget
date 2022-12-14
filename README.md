@@ -1,4 +1,4 @@
-# moisture_budget
+# Moisture Budget
 
 Calculate moisture budget equation as in Lubis and Respati (2020)
          Lubis, SW, Respati, MR. Impacts of convectively coupled 
