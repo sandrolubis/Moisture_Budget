@@ -4,9 +4,10 @@
 ;         equatorial waves on rainfall extremes in Java, Indonesia. 
 ;         Int J Climatol. 2021; 41: 2418– 2440
 ; Contact: slubis.geomar@gmail.com
+; Calculate moisture budget at a single pressure level (.e.g, 700 hPa)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Calculate moisture budget at a single pressure level (.e.g, 700 hPa)
+
 
 begin
 
