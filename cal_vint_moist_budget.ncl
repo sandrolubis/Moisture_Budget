@@ -1,3 +1,13 @@
+; Author: Dr. Sandro Lubis (Jan 2020)
+;         Moisture Budget as in Lubis and Respati (2020)
+;         Lubis, SW, Respati, MR. Impacts of convectively coupled 
+;         equatorial waves on rainfall extremes in Java, Indonesia. 
+;         Int J Climatol. 2021; 41: 2418– 2440
+; Contact: slubis.geomar@gmail.com
+; Calculate column integrated moisture budget
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
 begin
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++
