@@ -1,4 +1,5 @@
 # Moisture Budget
+By Sandro W. Lubis (PNNL)
 
 The column moisture budget equation describes the changes in moisture in a vertical column of the atmosphere. It states that the change in water vapor mixing ratio with respect to pressure, $∂q/∂t$, is equal to the sum of various terms (see Equation below). The first term in the right-hand side of Eq. represents the horizontal advection of moisture, the second term the horizontal moisture convergence, the third term the flux
 form of vertical moisture advection, and the fourth term moisture loss (gain) due to the condensational heating (raindrop-induced evaporation in the unsaturated atmosphere and surface evaporation) processes.
