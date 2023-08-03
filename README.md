@@ -10,7 +10,7 @@ e.g., see Lubis et al., (2023), Lubis and Respati (2020)
 
 Lubis, S. W., Hagos, S., Chang, C.-C., Balaguru, K., & Leung, L. R. (2023). Cross-equatorial surges boost MJO's southward detour over the Maritime Continent. Geophysical Research Letters, 50, e2023GL104770. https://doi.org/10.1029/2023GL104770
 
-Lubis, SW, Respati, MR. Impacts of convectively coupled equatorial waves on rainfall extremes in Java, Indonesia. Int J Climatol. 2021; 41: 2418– 2440
+Lubis, SW, Respati, MR. Impacts of convectively coupled equatorial waves on rainfall extremes in Java, Indonesia. Int J Climatol. 2021; 41: 2418– 2440.  https://doi.org/10.1002/joc.6967
          
          
  Contact: slubis.geomar@gmail.com
