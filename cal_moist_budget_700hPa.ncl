@@ -1,6 +1,6 @@
 ; Calculate moisture budget at a single pressure level (.e.g, 700 hPa)
 ; Author: Dr. Sandro Lubis (Jan 2020)
-;         Moisture Budget as in Lubis and Respati (2020)
+;         Moisture Budget as in Lubsi et al., (2023) and Lubis and Respati (2020)
 ;         Lubis, SW, Respati, MR. Impacts of convectively coupled 
 ;         equatorial waves on rainfall extremes in Java, Indonesia. 
 ;         Int J Climatol. 2021; 41: 2418– 2440
