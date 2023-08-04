@@ -1,9 +1,8 @@
 ; Calculate moisture budget at all atmospheric levels
-; Author: Dr. Sandro Lubis (Jan 2020)
-;         Moisture Budget as in Lubis et al., (2023) and Lubis and Respati (2020)
-;         Lubis, SW, Respati, MR. Impacts of convectively coupled 
-;         equatorial waves on rainfall extremes in Java, Indonesia. 
-;         Int J Climatol. 2021; 41: 2418– 2440
+; Author: Dr. Sandro Lubis 
+;         Moisture Budget as in Lubis et al., (2023)
+;         Lubis, et al. (2023). Cross-equatorial surges boost MJO's southward detour over the Maritime Continent. 
+;	  Geophysical Research Letters, 50, e2023GL104770. https://doi.org/10.1029/2023GL104770
 ; Contact: slubis.geomar@gmail.com
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
