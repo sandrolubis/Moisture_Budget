@@ -1,5 +1,5 @@
 ; Calculate mass-weighted column integrated moisture budget
-; Author: Dr. Sandro Lubis (Jan 2020)
+; Author: Dr. Sandro Lubis 
 ;         Moisture Budget as in Lubis et al., (2023)
 ;         Lubis, et al. (2023). Cross-equatorial surges boost MJO's southward detour over the Maritime Continent. 
 ;	  Geophysical Research Letters, 50, e2023GL104770. https://doi.org/10.1029/2023GL104770
