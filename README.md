@@ -9,7 +9,7 @@ Please cite this work if you use this code:
 Lubis, S. W., Hagos, S., Chang, C.-C., Balaguru, K., & Leung, L. R. (2023). Cross-equatorial surges boost MJO's southward detour over the Maritime Continent. Geophysical Research Letters, 50, e2023GL104770. https://doi.org/10.1029/2023GL104770
          
          
- Contact: slubis.geomar@gmail.com
+ Contact: sandro.lubis@pnnl.gov
  
 
 <p align="center">
