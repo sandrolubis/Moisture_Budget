@@ -42,7 +42,7 @@ print("Reading the input file...")
 
 time 		= f1->time
 ntime           = dimsizes(time)
-lev             = dble2flt(f1->plev({plev1:plev2})) * 1. ; hPa to Pa
+lev             = dble2flt(f1->plev({plev1:plev2})) * 100. ; hPa to Pa
 lat 		= dble2flt(f1->lat(::-1))
 lon	 	= dble2flt(f1->lon)
  
