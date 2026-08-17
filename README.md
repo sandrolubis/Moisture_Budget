@@ -3,9 +3,9 @@
 **Sandro W. Lubis, Ph.D.**
 Pacific Northwest National Laboratory (PNNL)
 
-This repository provides **NCL and Python scripts for calculating atmospheric moisture-budget diagnostics**, including horizontal moisture advection, moisture convergence, moisture flux convergence (MFC), vertical moisture transport, and vertically integrated moisture-budget terms.
+This repository provides **NCL and Python scripts for calculating atmospheric moisture-budget diagnostics**, including horizontal moisture advection, horizontal moisture convergence, moisture flux convergence (MFC), vertical moisture transport, and vertically integrated moisture-budget terms.
 
-The scripts are designed for applications involving tropical variability, large-scale circulation, precipitation, atmospheric rivers, and other hydroclimate processes in which changes in atmospheric moisture transport are important.
+These diagnostics are useful for studying tropical variability, atmospheric convection, precipitation, atmospheric rivers, large-scale circulation, and other hydroclimate processes in which moisture transport plays an important role.
 
 <p align="center">
   <img src="input/moisture_budget.png" width="800">
@@ -15,17 +15,25 @@ The scripts are designed for applications involving tropical variability, large-
 
 ## Overview
 
-The atmospheric moisture budget describes how water vapor changes through transport, convergence, and non-advective moisture sources and sinks.
+The atmospheric moisture budget describes the temporal evolution of water vapor through transport, convergence, storage, and physical moisture sources and sinks.
 
-In pressure coordinates, specific humidity $q$ evolves according to contributions from:
+In pressure coordinates, changes in specific humidity $q$ arise from:
 
 * horizontal moisture advection,
-* horizontal moisture convergence,
+* horizontal wind convergence,
 * vertical moisture transport,
 * local moisture storage, and
-* non-advective moisture sources and sinks associated with processes such as condensation, evaporation of condensate, and surface moisture exchange.
+* moisture sources and sinks associated with processes such as condensation, evaporation of condensate, and surface moisture exchange.
 
-The scripts in this repository diagnose these individual terms at pressure levels and after vertical integration through the atmospheric column.
+The scripts in this repository diagnose these processes at individual pressure levels and after vertical integration through the atmospheric column.
+
+Throughout this README,
+
+```math
+\mathbf{V}=(u,v)
+```
+
+denotes the **horizontal wind vector**, where $u$ and $v$ are the zonal and meridional wind components, respectively.
 
 ---
 
@@ -34,17 +42,17 @@ The scripts in this repository diagnose these individual terms at pressure level
 The horizontal moisture flux is
 
 ```math
-\mathbf{F}_q = q\mathbf{v},
+\mathbf{F}_q = q\mathbf{V},
 ```
 
-where $q$ is specific humidity and $\mathbf{v}=(u,v)$ is the horizontal wind.
+where $q$ is specific humidity and $\mathbf{V}=(u,v)$ is the horizontal wind vector.
 
 The horizontal **moisture flux convergence (MFC)** is defined as
 
 ```math
 \mathrm{MFC}
 =
--\nabla_h \cdot (q\mathbf{v}).
+-\nabla_h\cdot(q\mathbf{V}).
 ```
 
 Using the product rule, MFC can be decomposed into moisture-advection and wind-convergence components:
@@ -52,9 +60,9 @@ Using the product rule, MFC can be decomposed into moisture-advection and wind-c
 ```math
 \mathrm{MFC}
 =
--\mathbf{v}\cdot\nabla_h q
+-\mathbf{V}\cdot\nabla_h q
 -
-q\nabla_h\cdot\mathbf{v}.
+q\nabla_h\cdot\mathbf{V}.
 ```
 
 Therefore,
@@ -92,13 +100,15 @@ is the **horizontal moisture-advection term**, and
 
 is the contribution from **horizontal wind convergence**.
 
-This decomposition is useful for distinguishing whether anomalous moisture convergence arises primarily from the transport of moisture by the circulation or from convergence of the flow itself.
+This decomposition is useful for determining whether anomalous moisture flux convergence is primarily associated with the transport of moisture by the circulation or with convergence of the horizontal wind field.
 
 ---
 
 # 2. Vertical Moisture Transport
 
-In pressure coordinates, the vertical moisture-advection term is
+In pressure coordinates, vertical moisture transport can similarly be separated into advection and convergence components.
+
+The vertical moisture-advection term is
 
 ```math
 \mathrm{ADV}_{q,p}
@@ -106,9 +116,15 @@ In pressure coordinates, the vertical moisture-advection term is
 -\omega\frac{\partial q}{\partial p},
 ```
 
-where $\omega = dp/dt$ is pressure vertical velocity.
+where
 
-The corresponding vertical convergence contribution is
+```math
+\omega=\frac{Dp}{Dt}
+```
+
+is pressure vertical velocity.
+
+The vertical moisture-convergence contribution is
 
 ```math
 \mathrm{CONV}_{q,p}
@@ -123,12 +139,18 @@ Together,
 =
 -\omega\frac{\partial q}{\partial p}
 -
-q\frac{\partial\omega}{\partial p}
+q\frac{\partial\omega}{\partial p},
+```
+
+which can equivalently be written in flux form as
+
+```math
+\mathrm{MFC}_{p}
 =
 -\frac{\partial(q\omega)}{\partial p}.
 ```
 
-These terms describe vertical redistribution of atmospheric moisture.
+These terms describe the redistribution of atmospheric moisture by vertical motion.
 
 ---
 
@@ -140,7 +162,33 @@ The local moisture tendency is
 \frac{\partial q}{\partial t}.
 ```
 
-The scripts additionally diagnose the residual non-advective moisture source/sink as
+In pressure coordinates, the three-dimensional moisture equation can be written schematically as
+
+```math
+\frac{\partial q}{\partial t}
+=
+-\mathbf{V}\cdot\nabla_h q
+-
+\omega\frac{\partial q}{\partial p}
++
+S_q,
+```
+
+where $S_q$ represents non-advective moisture sources and sinks.
+
+Rearranging gives
+
+```math
+S_q
+=
+\frac{\partial q}{\partial t}
++
+\mathbf{V}\cdot\nabla_h q
++
+\omega\frac{\partial q}{\partial p}.
+```
+
+In component form,
 
 ```math
 S_q
@@ -154,15 +202,15 @@ v\frac{\partial q}{\partial y}
 \omega\frac{\partial q}{\partial p}.
 ```
 
-This term represents changes in specific humidity that are not explained by resolved three-dimensional advection and may include effects associated with condensation, evaporation, and other moist physical processes.
+This residual represents changes in atmospheric moisture not explained by resolved three-dimensional advection and may include processes associated with condensation, evaporation, precipitation formation, and other moist physical processes.
 
-The sign convention should always be checked when comparing this residual with precipitation, evaporation, or model-physics tendencies.
+The sign convention should be checked carefully when comparing this residual with precipitation, evaporation, or model-physics tendencies.
 
 ---
 
 # 4. Column-Integrated Moisture Budget
 
-Column water vapor is defined as
+The atmospheric column water vapor is defined as
 
 ```math
 W
@@ -172,7 +220,11 @@ W
 q\,dp,
 ```
 
-where $g$ is gravitational acceleration, $p_s$ is the lower pressure boundary, and $p_t$ is the upper pressure boundary.
+where
+
+* $g$ is gravitational acceleration,
+* $p_s$ is the lower pressure boundary, and
+* $p_t$ is the upper pressure boundary.
 
 The vertically integrated horizontal moisture transport is
 
@@ -181,30 +233,10 @@ The vertically integrated horizontal moisture transport is
 =
 \frac{1}{g}
 \int_{p_t}^{p_s}
-q\mathbf{v}\,dp.
+q\mathbf{V}\,dp.
 ```
 
-The column moisture budget can then be written as
-
-```math
-\frac{\partial W}{\partial t}
-=
--\nabla_h\cdot\mathbf{Q}
-+
-E-P,
-```
-
-or equivalently,
-
-```math
-P-E
-=
-\mathrm{MFC}_{\mathrm{column}}
--
-\frac{\partial W}{\partial t},
-```
-
-where
+The vertically integrated moisture flux convergence is then
 
 ```math
 \mathrm{MFC}_{\mathrm{column}}
@@ -212,20 +244,47 @@ where
 -\nabla_h\cdot\mathbf{Q}.
 ```
 
-Here,
+The column moisture budget can be written as
+
+```math
+\frac{\partial W}{\partial t}
+=
+\mathrm{MFC}_{\mathrm{column}}
++
+E-P,
+```
+
+where
 
 * $P$ is precipitation,
 * $E$ is surface evaporation,
 * $W$ is column water vapor, and
 * $\mathrm{MFC}_{\mathrm{column}}$ is vertically integrated moisture flux convergence.
 
-Under approximately steady conditions,
+Equivalently,
 
 ```math
-\frac{\partial W}{\partial t} \approx 0,
+P-E
+=
+\mathrm{MFC}_{\mathrm{column}}
+-
+\frac{\partial W}{\partial t}.
 ```
 
-and therefore
+Thus, precipitation minus evaporation depends on both moisture flux convergence and changes in atmospheric moisture storage.
+
+---
+
+## Steady-State Approximation
+
+If changes in atmospheric moisture storage are small,
+
+```math
+\frac{\partial W}{\partial t}
+\approx 0,
+```
+
+then the column moisture budget approximately reduces to
 
 ```math
 P-E
@@ -233,9 +292,12 @@ P-E
 \mathrm{MFC}_{\mathrm{column}}.
 ```
 
-Positive vertically integrated MFC therefore indicates net convergence of atmospheric moisture and generally favors positive $P-E$, whereas negative MFC indicates moisture divergence and drying.
+Under this approximation:
 
-For transient systems, however, the moisture-storage term should not be neglected.
+* **positive MFC** indicates net convergence of atmospheric moisture and favors positive $P-E$;
+* **negative MFC** indicates moisture divergence and favors drying or reduced net precipitation.
+
+For transient weather systems and daily or subseasonal variability, however, the storage term can be important and should not automatically be neglected.
 
 ---
 
@@ -272,9 +334,9 @@ Moisture_Budget/
 
 ## `cal_moist_budget_multi_levels.ncl`
 
-Calculates the moisture budget at multiple atmospheric pressure levels.
+Calculates the moisture-budget terms at multiple atmospheric pressure levels.
 
-The script diagnoses:
+The script diagnoses quantities including
 
 ```text
 dq_dt      local moisture tendency
@@ -285,7 +347,7 @@ mfc_ver    vertical moisture flux convergence
 q2         diagnosed moisture source/sink
 ```
 
-The horizontal MFC satisfies
+The horizontal moisture flux convergence satisfies
 
 ```math
 \mathrm{MFC}
@@ -295,15 +357,13 @@ The horizontal MFC satisfies
 \mathrm{CONV}_q.
 ```
 
-The script also explicitly calculates vertical moisture-advection and convergence terms.
+The script also calculates the corresponding vertical moisture-transport terms.
 
 ---
 
 ## `cal_moist_budget_single_level.ncl`
 
-Calculates the same moisture-budget decomposition but saves the diagnostics at a selected pressure level.
-
-The current script contains a pressure-level selection that can be modified according to the desired analysis level.
+Calculates the moisture-budget decomposition at a selected atmospheric pressure level.
 
 Typical output variables include
 
@@ -319,7 +379,9 @@ conv_q_zonal
 conv_q_meridional
 ```
 
-This script is useful when the analysis focuses on a particular part of the troposphere rather than the entire atmospheric column.
+This script is useful when the analysis focuses on a particular level of the troposphere rather than the full atmospheric column.
+
+The selected pressure level can be modified directly in the script.
 
 ---
 
@@ -333,10 +395,11 @@ The vertical integration follows the general form
 \left\langle A \right\rangle
 =
 \frac{1}{g}
-\int A\,dp.
+\int_{p_t}^{p_s}
+A\,dp.
 ```
 
-The script calculates vertically integrated:
+The script calculates vertically integrated quantities including
 
 ```text
 dq_dt                moisture tendency
@@ -352,7 +415,7 @@ q2                    moisture source/sink
 q                     column water vapor
 ```
 
-The vertically integrated tendency and transport terms are written in
+Vertically integrated moisture tendency and transport terms generally have units of
 
 ```text
 kg m^-2 s^-1
@@ -377,7 +440,7 @@ It evaluates
 ```math
 \mathrm{MFC}
 =
--\nabla_h\cdot(q\mathbf{v})
+-\nabla_h\cdot(q\mathbf{V})
 ```
 
 through its advection and convergence components:
@@ -385,12 +448,73 @@ through its advection and convergence components:
 ```math
 \mathrm{MFC}
 =
--\mathbf{v}\cdot\nabla_hq
+-\mathbf{V}\cdot\nabla_h q
 -
-q\nabla_h\cdot\mathbf{v}.
+q\nabla_h\cdot\mathbf{V}.
+```
+
+In component form,
+
+```math
+\mathrm{MFC}
+=
+-
+\left(
+u\frac{\partial q}{\partial x}
++
+v\frac{\partial q}{\partial y}
+\right)
+-
+q
+\left(
+\frac{\partial u}{\partial x}
++
+\frac{\partial v}{\partial y}
+\right).
 ```
 
 The default input files are
+
+```text
+u850.nc
+v850.nc
+q850.nc
+```
+
+with output written to
+
+```text
+mfc_850.nc
+```
+
+---
+
+## `cal_mfc_850.py`
+
+Python implementation of the 850-hPa moisture flux convergence calculation.
+
+The script uses **xarray** and **NumPy** and directly calculates the flux-form expression
+
+```math
+\mathrm{MFC}
+=
+-
+\left[
+\frac{\partial(qu)}{\partial x}
++
+\frac{\partial(qv)}{\partial y}
+\right].
+```
+
+This expression is mathematically equivalent to
+
+```math
+-\mathbf{V}\cdot\nabla_h q
+-
+q\nabla_h\cdot\mathbf{V}.
+```
+
+Default input files are
 
 ```text
 u850.nc
@@ -406,50 +530,15 @@ mfc_850.nc
 
 ---
 
-## `cal_mfc_850.py`
-
-Python implementation of the 850-hPa moisture flux convergence calculation.
-
-The script uses **xarray** and **NumPy** and directly evaluates
-
-```math
-\mathrm{MFC}
-=
--
-\left[
-\frac{\partial(qu)}{\partial x}
-+
-\frac{\partial(qv)}{\partial y}
-\right]
-```
-
-using centered finite differences on a regular latitude-longitude grid.
-
-Default input:
-
-```text
-u850.nc
-v850.nc
-q850.nc
-```
-
-Default output:
-
-```text
-mfc_850.nc
-```
-
----
-
 # Input Data
 
-The NCL moisture-budget scripts are written for data with dimensions approximately organized as
+The moisture-budget scripts are designed for atmospheric data organized approximately as
 
 ```text
 [time, pressure, latitude, longitude]
 ```
 
-The current implementations use ERA5-style variable names:
+The current NCL implementations use ERA5-style variable names such as
 
 ```text
 var131    zonal wind, u
@@ -458,27 +547,28 @@ var133    specific humidity, q
 var135    pressure vertical velocity, omega
 ```
 
-Typical physical units are:
+Typical physical units are
 
 ```text
 u, v       m s^-1
 q          kg kg^-1
 omega      Pa s^-1
-pressure   Pa or hPa, depending on the input dataset
+pressure   Pa or hPa, depending on the dataset
 ```
 
 Before running the scripts, users should verify:
 
+* input and output directories;
 * variable names;
+* coordinate names;
 * pressure units;
 * pressure-level ordering;
 * latitude ordering;
 * longitude convention;
-* temporal resolution;
-* input/output directories; and
-* coordinate names.
+* temporal resolution; and
+* missing-value treatment.
 
-The scripts can be readily modified for datasets that use different variable names or file structures.
+The scripts can be modified for datasets that use different variable names or file structures.
 
 ---
 
@@ -504,19 +594,19 @@ For the vertically integrated moisture budget:
 ncl cal_vint_moist_budget.ncl
 ```
 
-For 850-hPa MFC:
+For 850-hPa moisture flux convergence:
 
 ```bash
 ncl cal_mfc_850.ncl
 ```
 
-Input paths, years, pressure levels, and variable names should be modified directly in the scripts as needed.
+Input paths, output paths, pressure levels, years, and variable names can be modified directly in the scripts.
 
 ---
 
 ## Python
 
-The Python MFC calculation requires
+The Python implementation requires
 
 ```text
 xarray
@@ -533,37 +623,91 @@ python cal_mfc_850.py
 
 # Sign Convention
 
-In this repository,
+Throughout this repository, horizontal moisture flux convergence is defined as
 
 ```math
 \mathrm{MFC}
 =
--\nabla\cdot(q\mathbf{v}).
+-\nabla_h\cdot(q\mathbf{V}).
 ```
 
-Therefore:
+Therefore,
 
 ```text
 MFC > 0    moisture flux convergence
 MFC < 0    moisture flux divergence
 ```
 
-Positive MFC indicates convergence of water vapor into a region, whereas negative MFC indicates export of water vapor.
+Positive MFC represents net transport of atmospheric moisture **into** a region, whereas negative MFC represents net moisture transport **out of** a region.
 
-When comparing MFC with $P-E$, remember that the atmospheric moisture-storage term can become important on daily and other transient timescales.
+For the column-integrated budget,
+
+```math
+P-E
+=
+\mathrm{MFC}_{\mathrm{column}}
+-
+\frac{\partial W}{\partial t}.
+```
+
+Thus, MFC should not necessarily be interpreted as precipitation minus evaporation when atmospheric moisture storage is changing substantially.
+
+---
+
+# Physical Interpretation
+
+The moisture-budget decomposition helps distinguish the dynamical processes responsible for changes in atmospheric moisture.
+
+### Moisture advection
+
+```math
+-\mathbf{V}\cdot\nabla_h q
+```
+
+describes the transport of existing moisture gradients by the horizontal circulation.
+
+A positive value indicates horizontal advection that locally increases moisture.
+
+### Wind convergence
+
+```math
+-q\nabla_h\cdot\mathbf{V}
+```
+
+describes moisture accumulation resulting from convergence of the horizontal wind field.
+
+A positive value corresponds to dynamically convergent flow acting on the ambient moisture field.
+
+### Vertical moisture transport
+
+```math
+-\omega\frac{\partial q}{\partial p}
+```
+
+describes changes in moisture associated with vertical motion across vertical humidity gradients.
+
+### Moisture storage
+
+```math
+\frac{\partial W}{\partial t}
+```
+
+represents temporal changes in the amount of water vapor contained within the atmospheric column.
+
+Together, these diagnostics provide a framework for understanding how atmospheric circulation redistributes water vapor and influences precipitation.
 
 ---
 
 # Example Scientific Application
 
-The moisture-budget framework used in this repository was applied to investigate the propagation of the **Madden–Julian Oscillation (MJO)** across the Maritime Continent and the role of cross-equatorial surges in modifying its moisture distribution and southward propagation.
+The moisture-budget framework in this repository was applied to investigate the propagation of the **Madden–Julian Oscillation (MJO)** across the Maritime Continent and the role of cross-equatorial surges in modifying atmospheric moisture and the southward propagation of MJO convection.
 
-Please cite the following paper when using this code:
+Please cite the following study when using this code:
 
 **Lubis, S. W., Hagos, S., Chang, C.-C., Balaguru, K., & Leung, L. R. (2023).**
 *Cross-equatorial surges boost MJO's southward detour over the Maritime Continent.*
 **Geophysical Research Letters, 50**, e2023GL104770.
-doi:10.1029/2023GL104770
+https://doi.org/10.1029/2023GL104770
 
 ---
 
@@ -571,9 +715,9 @@ doi:10.1029/2023GL104770
 
 If you use these scripts in your research, please cite:
 
-> Lubis, S. W., Hagos, S., Chang, C.-C., Balaguru, K., & Leung, L. R. (2023). Cross-equatorial surges boost MJO's southward detour over the Maritime Continent. *Geophysical Research Letters, 50*, e2023GL104770. doi:10.1029/2023GL104770
+> Lubis, S. W., Hagos, S., Chang, C.-C., Balaguru, K., & Leung, L. R. (2023). Cross-equatorial surges boost MJO's southward detour over the Maritime Continent. *Geophysical Research Letters, 50*, e2023GL104770. https://doi.org/10.1029/2023GL104770
 
-### BibTeX
+## BibTeX
 
 ```bibtex
 @article{Lubis2023MJO,
@@ -591,17 +735,18 @@ If you use these scripts in your research, please cite:
 
 # Notes
 
-These scripts are intended primarily as research tools. The numerical derivatives and vertical integrations depend on the structure and resolution of the input data, so users should verify budget closure and sign conventions for their particular dataset.
+These scripts are intended primarily as research tools. Numerical derivatives and vertical integrations depend on the structure and resolution of the input data, and users should verify budget closure and sign conventions for their specific datasets.
 
 Particular care should be taken when applying the calculations near:
 
-* the poles,
-* topography,
+* steep topography,
 * the lower atmospheric boundary,
-* missing pressure levels, or
-* irregular grids.
+* the poles,
+* missing pressure levels,
+* irregular horizontal grids, or
+* regions where the pressure surface intersects the terrain.
 
-For exact moisture-budget closure, surface pressure, boundary moisture fluxes, precipitation, evaporation, and storage should be treated consistently with the dataset being analyzed.
+For rigorous column-moisture budget closure, surface pressure, boundary moisture fluxes, precipitation, evaporation, and atmospheric moisture storage should be treated consistently.
 
 ---
 
@@ -616,4 +761,4 @@ Contact: **[sandro.lubis@pnnl.gov](mailto:sandro.lubis@pnnl.gov)**
 
 # License
 
-This repository is distributed under the **MIT License**.
+This repository is distributed under the **MIT License**. See the `LICENSE` file for details.
