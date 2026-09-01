@@ -16,9 +16,10 @@ These diagnostics are useful for studying tropical variability, atmospheric conv
 ## Citation
 If you use or adapt this code, please cite:
 
-**Lubis, S. W., L. R. Leung, and M. Battalio (2026).**  
-*More Frequent Atmospheric Rivers and Associated Precipitation Extremes Induced by the Baroclinic Annular Mode.*  
-**Geophysical Research Letters.**
+**Lubis, S. W., Hagos, S., Chang, C.-C., Balaguru, K., & Leung, L. R. (2023).**
+*Cross-equatorial surges boost MJO's southward detour over the Maritime Continent.*
+**Geophysical Research Letters, 50**, e2023GL104770.
+https://doi.org/10.1029/2023GL104770
 
 
 ## Overview
