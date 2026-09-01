@@ -13,6 +13,14 @@ These diagnostics are useful for studying tropical variability, atmospheric conv
 
 ---
 
+## Citation
+If you use or adapt this code, please cite:
+
+**Lubis, S. W., L. R. Leung, and M. Battalio (2026).**  
+*More Frequent Atmospheric Rivers and Associated Precipitation Extremes Induced by the Baroclinic Annular Mode.*  
+**Geophysical Research Letters.**
+
+
 ## Overview
 
 The atmospheric moisture budget describes the temporal evolution of water vapor through transport, convergence, storage, and physical moisture sources and sinks.
